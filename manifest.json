@@ -1,0 +1,8 @@
+{
+  "manifest_version": 2,
+  "name": "Lets Login",
+  "version": "0.0.1",
+  "description": "a plugin to save login info"
+
+  "default_locale": ""
+}
