@@ -4,7 +4,25 @@
  *
  * Distributed under terms of the MIT license.
  */
+let loginInfos = [];
+
+chrome.runtime.onMessage.addListener((msg, sender, res) => {
+  msg.payload.forEach(function(info) {
+    if (info.path === location.origin + location.pathname) {
+      loginInfos.push(info);
+    }
+
+    autoFill();
+  })
+  res('content ok');
+});
+
+function autoFill() {
+
+}
+
 $('docuemnt').ready(function() {
+
   var forms = $('form');
   console.log('forms', forms);
   forms.each(function(i) {
@@ -41,6 +59,7 @@ $('docuemnt').ready(function() {
 
     form.submit(function(e) {
       console.log(this, currentForm);
+      //TODO: fetch
     });
   });
 })

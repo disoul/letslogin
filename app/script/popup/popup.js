@@ -10,6 +10,23 @@ import store from 'store';
 
 const host = 'http://127.0.0.1:4000'
 
+const sendLoginInfo() => {
+  let info = store.get('info');
+  
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function (tabs) {
+    chrome.tabs.sendMessage(
+      tabs[0].id,
+      {from: 'popup', payload: info},
+      function(res) {
+        console.log('sdsadasd', res);
+      }
+    );
+  });
+}
+
 const initLogin = () => {
   $('#app').append(loginTemplate);
 
@@ -52,6 +69,6 @@ $(document).ready(() => {
     let html = getIndexHTML(user);
     $('#app').append(html);
   }
-})
 
+})
 
