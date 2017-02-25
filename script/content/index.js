@@ -4,8 +4,5 @@
  *
  * Distributed under terms of the MIT license.
  */
-(function(){
-  'use strict';
-  
-  console.log('LETS LOGIN', window, document);  
-})();
+alert('sad');
+console.log('LETS LOGIN', $('input'));
