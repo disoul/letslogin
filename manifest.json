@@ -17,7 +17,8 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["./build/content.js"]
+      "js": ["./node_modules/jquery/dist/jquery.js", "./script/content/index.js"],
+      "run_at": "document_end"
     }
   ]
 }
