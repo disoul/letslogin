@@ -23,6 +23,7 @@ function auth(req, res, next) {
       'ilovenagisa'
     );
   } catch(err) {
+    switch (err.name) {
       case 'TokenExpiredError':
         res.status(403).json({error: 'token expiredError'});
         break;
@@ -31,6 +32,7 @@ function auth(req, res, next) {
         break;
       default:
         res.status(403).json({error: 'token verify error'});
+    }
   }
 
 

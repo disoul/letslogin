@@ -11,6 +11,7 @@ const app = express();
 
 const auth = require('./utils/auth');
 const md5 = require('md5');
+const jwt = require('jsonwebtoken');
 
 const userModel = require('./model/user');
 
@@ -27,20 +28,45 @@ app.all('/api/*', auth);
 
 // 用户注册
 app.post('/signup', async (req, res) => {
-  let user = new userModel(res.body);
+  let userInfo = {
+    user: req.body.user,
+    // 对服务器密码做md5加密保存
+    password: md5(req.body.password),
+  }
+  let user = new userModel(userInfo);
   try {
-    await userModel.save(user);
+    await user.save();
     res.status(201).send();
   } catch(e) {
-    res.status(500).send({error: e});
+    res.status(500).send({error: e.toString()});
   }
 });
 
 app.post('/login', async (req, res) => {
   try {
-    let user = await userModel.findOne(req.body.user);
+    let user = await userModel.findOne({user: req.body.user});
+    // 密码md5后符合，登录成功
+    if (user.password === md5(req.body.password)) {
+
+      // 签发认证token给用户
+      let token = jwt.sign(
+        {
+          user: req.body.user,
+          t: Date.now,
+        },
+        // token 密钥
+        'ilovenagisa',
+        // token 有效期
+        {
+          expiresIn: '10d',
+        }
+      );
+      res.status(200).send({token: token});
+    } else {
+      res.status(403).send({error: 'password error'});
+    }
   } catch(e) {
-    res.status(400).send({error: e});
+    res.status(400).send({error: e.toString()});
   }
 })
 
