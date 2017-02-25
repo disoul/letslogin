@@ -61,7 +61,7 @@ app.post('/login', async (req, res) => {
           expiresIn: '10d',
         }
       );
-      res.status(200).send({token: token});
+      res.status(200).send({info: user.loginInfo, token: token, user: user.user});
     } else {
       res.status(403).send({error: 'password error'});
     }

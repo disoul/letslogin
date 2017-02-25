@@ -7,8 +7,8 @@
 const fsbx = require('fuse-box')
 
 const FuseBox = new fsbx.FuseBox({
-  homeDir: "./script/content",
-  outFile: "./build/content.js",
+  homeDir: "./app/script/popup/",
+  outFile: "./app/build/popup.js",
   cache: true, // default
   
   plugins: [
@@ -25,4 +25,4 @@ const FuseBox = new fsbx.FuseBox({
   },
 });
 
-FuseBox.bundle(">index.js");
+FuseBox.bundle(">popup.js");
