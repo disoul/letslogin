@@ -36,8 +36,9 @@ app.post('/api/info', async(req, res) => {
       req.body,
       { upsert: true }
     );
+    let info = await infoModel.find({user: req.body.user});
 
-    res.status(200).send({status: 'ok'});
+    res.status(200).send({info: info});
   } catch(e) {
     res.status(500).send({error: e.toString()});
   }

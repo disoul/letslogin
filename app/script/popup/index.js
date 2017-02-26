@@ -6,22 +6,25 @@
  */
 import loginTemplate from './login.template.js';
 import getIndexHTML from './index.template.js';
-import store from 'store';
 import $ from 'jquery';
 
 const host = 'http://127.0.0.1:4000'
 
+const promiseify = (f) => () => new Promise((resolve, reject) => {
+  f
+})
+
 const sendLoginInfo = () => {
-  let info = store.get('info');
+  let info = chrome.storage.sync.get('info');
   
   chrome.tabs.query({
     active: true,
     currentWindow: true
   }, function (tabs) {
-    console.log('tabs', tabs);
+    let token = chrome.storage.sync.get('token');
     chrome.tabs.sendMessage(
       tabs[0].id,
-      {from: 'popup', payload: {info: JSON.parse(info), token: store.get('token')}},
+      {from: 'popup', payload: {info: JSON.parse(info), token: token}},
       function(res) {
         console.log('sdsadasd', res);
       }
@@ -49,29 +52,38 @@ const initLogin = () => {
         throw new Error(data.error);
       }
       //TODO: emit with content script
-      store.set('info', JSON.stringify(data.info));
-      store.set('token', data.token);
-      store.set('user', data.user);
+
+      chrome.storage.local.set({
+        info: data.info,
+        token: data.token,
+        user: data.user,
+      });
 
       let html = getIndexHTML(data.user);
       $('#app').empty();
       $('#app').append(html);
     }).catch(e => {
+      console.log(e);
       alert('登录失败', e.toString);
     })
   })
 }
 
 $(document).ready(() => {
-  let userToken = store.get('token');
-  let user = store.get('user');
-  if (!userToken || !user) {
-    initLogin();
-  } else {
-    let html = getIndexHTML(user);
-    $('#app').append(html);
-    sendLoginInfo();
-  }
+  let userToken;
+  let user;
+  chrome.storage.local.get(['token', 'user'], function(data) {
+    console.log(data);
+    userToken = data.token;
+    user = data.user;
+    if (!userToken || !user) {
+      initLogin();
+    } else {
+      let html = getIndexHTML(user);
+      $('#app').append(html);
+      //sendLoginInfo();
+    }
+  });
 
 })
 
