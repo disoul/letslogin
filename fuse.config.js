@@ -6,9 +6,12 @@
  */
 const fsbx = require('fuse-box')
 
+const homeDir = process.env.HOME === 'popup' ? './app/script/popup' : './app/script/content/';
+const outFile = process.env.HOME === 'popup' ? 'popup.js' : 'content.js';
+
 const FuseBox = new fsbx.FuseBox({
-  homeDir: "./app/script/popup/",
-  outFile: "./app/build/popup.js",
+  homeDir: homeDir,
+  outFile: "./app/build/" + outFile,
   cache: true, // default
   
   plugins: [
@@ -25,4 +28,4 @@ const FuseBox = new fsbx.FuseBox({
   },
 });
 
-FuseBox.bundle(">popup.js");
+FuseBox.bundle(">index.js");

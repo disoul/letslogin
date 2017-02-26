@@ -14,8 +14,20 @@ const Schema = mongoose.Schema;
 const User = new Schema({
   user: { type: String, unique: true },
   password: String,
-  loginInfo: [Schema.Types.Mixed],
+});
+
+const LoginInfo = new Schema({
+  user: String,
+  path: String,
+  userSelector: String,
+  userValue: String,
+  passwordSelector: String,
+  passwordValue: String,
 });
 
 const userModel = mongoose.model('User', User);
-module.exports = userModel;
+const infoModel = mongoose.model('loginInfo', LoginInfo);
+module.exports = {
+  userModel,
+  infoModel,
+};

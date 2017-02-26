@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 
 // 登录认证中间件，使用jwt加密认证
 function auth(req, res, next) {
+  console.log('auth', req.body);
   let token = req.get('Authorization');
 
   if (!token) {
@@ -22,6 +23,8 @@ function auth(req, res, next) {
       token,
       'ilovenagisa'
     );
+    req.auth = {};
+    req.auth.user = payload.user;
   } catch(err) {
     switch (err.name) {
       case 'TokenExpiredError':
@@ -31,7 +34,7 @@ function auth(req, res, next) {
         res.status(403).json({error: 'invalid token'});
         break;
       default:
-        res.status(403).json({error: 'token verify error'});
+        res.status(403).json({error: 'token verify error' + err.toString()});
     }
   }
 

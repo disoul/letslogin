@@ -4,24 +4,33 @@
  *
  * Distributed under terms of the MIT license.
  */
+import unique from 'unique-selector';
+import $ from 'jquery';
+
+const host = 'http://127.0.0.1:4000'
 let loginInfos = [];
+let token = '';
 
 chrome.runtime.onMessage.addListener((msg, sender, res) => {
-  msg.payload.forEach(function(info) {
+  console.log('get msg', msg);
+  msg.payload.info.forEach(function(info) {
     if (info.path === location.origin + location.pathname) {
       loginInfos.push(info);
     }
-
-    autoFill();
   })
+  token = msg.payload.token;
+  autoFill();
   res('content ok');
 });
 
 function autoFill() {
-
+  loginInfos.forEach(info => {
+    $(info.userSelector).val(info.userValue);
+    $(info.passwordSelector).val(info.passwordValue);
+  });
 }
 
-$('docuemnt').ready(function() {
+$(document).ready(function() {
 
   var forms = $('form');
   console.log('forms', forms);
@@ -58,8 +67,32 @@ $('docuemnt').ready(function() {
     })
 
     form.submit(function(e) {
+      console.log('submit!');
       console.log(this, currentForm);
-      //TODO: fetch
+      let options = {
+        selectorTypes: [ 'ID', 'Class', 'Tag', 'NthChild' ],
+      };
+      fetch(host + '/api/info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: JSON.stringify({
+          path: location.origin + location.pathname,
+          userSelector: unique(currentForm.user, options),
+          userValue: currentForm.user.value,
+          passwordSelector: unique(currentForm.password, options),
+          passwordValue: currentForm.password.value,
+        })
+      }).then(res => res.json()).then(data => {
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        console.log('save success');
+      }).catch(e => {
+        alert("上传失败", e.toString());
+      })
     });
   });
 })

@@ -7,19 +7,21 @@
 import loginTemplate from './login.template.js';
 import getIndexHTML from './index.template.js';
 import store from 'store';
+import $ from 'jquery';
 
 const host = 'http://127.0.0.1:4000'
 
-const sendLoginInfo() => {
+const sendLoginInfo = () => {
   let info = store.get('info');
   
   chrome.tabs.query({
     active: true,
     currentWindow: true
   }, function (tabs) {
+    console.log('tabs', tabs);
     chrome.tabs.sendMessage(
       tabs[0].id,
-      {from: 'popup', payload: info},
+      {from: 'popup', payload: {info: JSON.parse(info), token: store.get('token')}},
       function(res) {
         console.log('sdsadasd', res);
       }
@@ -68,6 +70,7 @@ $(document).ready(() => {
   } else {
     let html = getIndexHTML(user);
     $('#app').append(html);
+    sendLoginInfo();
   }
 
 })

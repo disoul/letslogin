@@ -13,7 +13,8 @@ const auth = require('./utils/auth');
 const md5 = require('md5');
 const jwt = require('jsonwebtoken');
 
-const userModel = require('./model/user');
+const userModel = require('./model/user').userModel;
+const infoModel = require('./model/user').infoModel;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -25,6 +26,22 @@ app.get('/', (req, res) => {
 // 登录认证中间件
 // 所有/api的请求都需要进行用户认证
 app.all('/api/*', auth);
+
+app.post('/api/info', async(req, res) => {
+  try {
+    let user = await userModel.findOne({user: req.auth.user});
+    req.body.user = user.user;
+    let doc = await infoModel.findOneAndUpdate(
+      { user: req.body.user, path: req.body.path },
+      req.body,
+      { upsert: true }
+    );
+
+    res.status(200).send({status: 'ok'});
+  } catch(e) {
+    res.status(500).send({error: e.toString()});
+  }
+});
 
 // 用户注册
 app.post('/signup', async (req, res) => {
@@ -61,7 +78,8 @@ app.post('/login', async (req, res) => {
           expiresIn: '10d',
         }
       );
-      res.status(200).send({info: user.loginInfo, token: token, user: user.user});
+      let loginInfo = await infoModel.find({user: user.user});
+      res.status(200).send({info: loginInfo, token: token, user: user.user});
     } else {
       res.status(403).send({error: 'password error'});
     }
