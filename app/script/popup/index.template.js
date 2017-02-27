@@ -7,6 +7,6 @@
 export default function getIndexHTML(user) {
   return `
     <p>用户 ${user}已登录</p>
-    <button onclick="chrome.storage.local.clear()">登出</button>
+    <button id="logout">登出</button>
   `;
 }

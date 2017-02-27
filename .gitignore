@@ -9,3 +9,5 @@ dist
 *.log*
 build
 .fusebox
+*.crx
+*.pem

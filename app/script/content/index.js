@@ -7,7 +7,7 @@
 import unique from 'unique-selector';
 import $ from 'jquery';
 
-const host = 'http://127.0.0.1:4000'
+const host = 'https://letslogin.disoul.me'
 let loginInfos = [];
 let token = '';
 
@@ -21,7 +21,7 @@ function autoFill() {
 $(document).ready(function() {
   chrome.storage.local.get(['token', 'info', 'user'], function(data) {
     if (!data.token) {
-      alert('Letslogin 请登录');
+      console.log('Letslogin 请登录');
       return;
     }
     console.log('get info', data);

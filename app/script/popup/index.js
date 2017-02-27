@@ -8,7 +8,7 @@ import loginTemplate from './login.template.js';
 import getIndexHTML from './index.template.js';
 import $ from 'jquery';
 
-const host = 'http://127.0.0.1:4000'
+const host = 'https://letslogin.disoul.me'
 
 const promiseify = (f) => () => new Promise((resolve, reject) => {
   f
@@ -62,6 +62,9 @@ const initLogin = () => {
       let html = getIndexHTML(data.user);
       $('#app').empty();
       $('#app').append(html);
+      $('#logout').click(() => {
+        chrome.storage.local.clear();
+      })
     }).catch(e => {
       console.log(e);
       alert('登录失败', e.toString);
@@ -81,6 +84,9 @@ $(document).ready(() => {
     } else {
       let html = getIndexHTML(user);
       $('#app').append(html);
+      $('#logout').click(() => {
+        chrome.storage.local.clear();
+      })
       //sendLoginInfo();
     }
   });
