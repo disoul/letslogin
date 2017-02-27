@@ -1,0 +1,13 @@
+node_modules
+coverage
+.idea
+npm-debug.log
+.DS_Store
+dist
+*.swp*
+*.tmp*
+*.log*
+build
+.fusebox
+*.crx
+*.pem

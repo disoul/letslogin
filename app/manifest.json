@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "Lets Login",
+  "version": "0.0.1",
+  "description": "a plugin to save login info",
+
+  "browser_action": {
+    "default_icon": "./assets/icon.jpg",
+    "default_popup": "popup.html"
+  },
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["./jquery.js", "./build/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
