@@ -54,7 +54,7 @@ app.post('/signup', async (req, res) => {
   let user = new userModel(userInfo);
   try {
     await user.save();
-    res.status(201).send();
+    res.status(200).send({status: 'ok'});
   } catch(e) {
     res.status(500).send({error: e.toString()});
   }

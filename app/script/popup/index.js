@@ -69,7 +69,26 @@ const initLogin = () => {
       console.log(e);
       alert('登录失败', e.toString);
     })
-  })
+  });
+
+  $("#signup").submit(e => {
+    fetch(host + '/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: $('#user1')[0].value,
+        password: $('#password1')[0].value,
+      }).then(res => res.json()).then(res => {
+        if (res.status == 'ok') {
+          alert('注册成功， 请登录');
+        } else {
+          alert('注册失败', res.error);
+        }
+      })
+    })
+  });
 }
 
 $(document).ready(() => {
