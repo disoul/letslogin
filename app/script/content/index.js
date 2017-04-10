@@ -7,14 +7,21 @@
 import unique from 'unique-selector';
 import $ from 'jquery';
 
+const CryptoJS = require('crypto-js');
+
 const host = 'https://letslogin.disoul.me'
+// const host = 'http://127.0.0.1:4000';
 let loginInfos = [];
 let token = '';
 
 function autoFill() {
   loginInfos.forEach(info => {
     $(info.userSelector).val(info.userValue);
-    $(info.passwordSelector).val(info.passwordValue);
+
+    // AES 解密
+    let passwordBytes = CryptoJS.AES.decrypt(info.passwordValue, 'secretkeyisme!@#');
+    let password = passwordBytes.toString(CryptoJS.enc.Utf8);
+    $(info.passwordSelector).val(password);
   });
 }
 

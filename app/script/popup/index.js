@@ -8,7 +8,8 @@ import loginTemplate from './login.template.js';
 import getIndexHTML from './index.template.js';
 import $ from 'jquery';
 
-const host = 'https://letslogin.disoul.me'
+const host = 'https://letslogin.disoul.me';
+// const host = 'http://127.0.0.1:4000';
 
 const promiseify = (f) => () => new Promise((resolve, reject) => {
   f
@@ -72,6 +73,7 @@ const initLogin = () => {
   });
 
   $("#signup").submit(e => {
+    e.preventDefault();
     fetch(host + '/signup', {
       method: 'POST',
       headers: {
@@ -80,13 +82,15 @@ const initLogin = () => {
       body: JSON.stringify({
         user: $('#user1')[0].value,
         password: $('#password1')[0].value,
-      }).then(res => res.json()).then(res => {
-        if (res.status == 'ok') {
-          alert('注册成功， 请登录');
-        } else {
-          alert('注册失败', res.error);
-        }
       })
+    }).then(res => res.json()).then(res => {
+      if (res.status == 'ok') {
+        $('.tip').remove();
+        $('#signup').append('<p class="tip">注册成功</p>');
+      } else {
+        $('.tip').remove();
+        $('#signup').append('<p class="tip">注册失败</p>');
+      }
     })
   });
 }

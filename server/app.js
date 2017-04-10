@@ -16,6 +16,8 @@ const jwt = require('jsonwebtoken');
 const userModel = require('./model/user').userModel;
 const infoModel = require('./model/user').infoModel;
 
+const AES = require("crypto-js/aes");
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -31,6 +33,8 @@ app.post('/api/info', async(req, res) => {
   try {
     let user = await userModel.findOne({user: req.auth.user});
     req.body.user = user.user;
+    // 使用AES加密用户密码信息，第二个参数为密钥
+    req.body.passwordValue = AES.enctypt(req.body.passwordValue, 'secretkeyisme!@#');
     let doc = await infoModel.findOneAndUpdate(
       { user: req.body.user, path: req.body.path },
       req.body,
