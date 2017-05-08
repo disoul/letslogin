@@ -7,7 +7,6 @@ dist
 *.swp*
 *.tmp*
 *.log*
-build
 .fusebox
 *.crx
 *.pem
